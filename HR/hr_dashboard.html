@@ -1,26 +1,24 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HR 後台</title>
+    <title>HR 管理後台</title>
 </head>
 <body>
-    <h1>HR 後台</h1>
+    <h1>HR 管理後台</h1>
     <table border="1">
         <thead>
             <tr>
-                <th>表單連結</th>
                 <th>員工姓名</th>
                 <th>薪資</th>
+                <th>填寫連結</th>
             </tr>
         </thead>
         <tbody>
-            {% for unique_id, data in employee_data.items() %}
+            {% for employee in employees %}
             <tr>
-                <td><a href="{{ data.link }}">{{ data.link }}</a></td>
-                <td>{{ data.name if data.name else '尚未提交' }}</td>
-                <td>{{ data.salary if data.salary else '尚未提交' }}</td>
+                <td>{{ employee['name'] }}</td>
+                <td>{{ employee['salary'] }}</td>
+                <td><a href="{{ employee['unique_link'] }}">查看填寫表單</a></td>
             </tr>
             {% endfor %}
         </tbody>

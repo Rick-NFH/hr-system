@@ -1,22 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>生成員工填寫表單的鏈接</title>
+    <title>生成員工連結</title>
 </head>
 <body>
-    <h1>生成員工填寫表單的鏈接</h1>
-    <form method="POST" action="{{ url_for('generate_link') }}">
-        <button type="submit">生成新鏈接</button>
+    <h1>生成新的員工填寫表單連結</h1>
+    <form method="POST">
+        <label for="name">員工姓名:</label>
+        <input type="text" id="name" name="name" required><br><br>
+        <label for="salary">薪資:</label>
+        <input type="text" id="salary" name="salary" required><br><br>
+        <input type="submit" value="生成連結">
     </form>
-
-    {% if form_link %}
-        <h2>新鏈接</h2>
-        <p>給新員工的鏈接: <a href="{{ form_link }}">{{ form_link }}</a></p>
-    {% endif %}
-
-    <h2>HR 後台</h2>
-    <a href="{{ url_for('hr_dashboard') }}">點擊這裡進入 HR 後台</a>
 </body>
 </html>

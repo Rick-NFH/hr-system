@@ -1,20 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>新人信息填寫表單</title>
+    <title>填寫員工資料</title>
 </head>
 <body>
-    <h1>新人填寫表單</h1>
+    <h1>請填寫您的資料</h1>
     <form method="POST">
-        <label for="name">姓名:</label>
-        <input type="text" id="name" name="name"><br>
-
+        <label for="name">員工姓名:</label>
+        <input type="text" id="name" name="name" value="{{ employee_id }}" readonly><br><br>
         <label for="salary">薪資:</label>
-        <input type="text" id="salary" name="salary"><br>
-
-        <button type="submit">提交</button>
+        <input type="text" id="salary" name="salary" required><br><br>
+        <input type="submit" value="提交">
     </form>
 </body>
 </html>
