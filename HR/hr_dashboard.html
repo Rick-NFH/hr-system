@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>HR管理後台</title>
+</head>
+<body>
+    <h1>員工列表</h1>
+    <table border="1">
+        <tr>
+            <th>ID</th>
+            <th>姓名</th>
+            <th>薪資</th>
+        </tr>
+        {% for employee in employees %}
+        <tr>
+            <td>{{ employee[0] }}</td>
+            <td>{{ employee[1] }}</td>
+            <td>{{ employee[2] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
