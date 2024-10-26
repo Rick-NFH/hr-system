@@ -1,24 +1,21 @@
 from flask import Flask, render_template
-import sqlite3
+import csv
 
 app = Flask(__name__)
 
-# 創建數據庫連接
-def create_connection():
-    conn = sqlite3.connect('database.db')
-    return conn
+# 文件存儲路徑
+FILE_PATH = '/home/rickneex/hr-system/employee_data.csv'
 
-# 後台數據頁面
+# HR後台查看所有員工的資料
 @app.route('/hr_dashboard')
 def hr_dashboard():
-    conn = create_connection()
-    cursor = conn.cursor()
-
-    cursor.execute("SELECT * FROM employees")
-    employees = cursor.fetchall()
-    conn.close()
-
+    employees = []
+    with open(FILE_PATH, mode='r', encoding='utf-8') as file:
+        reader = csv.reader(file)
+        next(reader)  # 跳過標題行
+        for row in reader:
+            employees.append({'name': row[0], 'salary': row[1]})
     return render_template('hr_dashboard.html', employees=employees)
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)
