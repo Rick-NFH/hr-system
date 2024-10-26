@@ -1,27 +1,24 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>HR 管理後台</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HR 後台</title>
 </head>
 <body>
-    <h1>HR 管理後台</h1>
+    <h1>員工資料</h1>
     <table border="1">
-        <thead>
-            <tr>
-                <th>員工姓名</th>
-                <th>薪資</th>
-                <th>填寫連結</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for employee in employees %}
-            <tr>
-                <td>{{ employee['name'] }}</td>
-                <td>{{ employee['salary'] }}</td>
-                <td><a href="{{ employee['unique_link'] }}">查看填寫表單</a></td>
-            </tr>
-            {% endfor %}
-        </tbody>
+        <tr>
+            <th>姓名</th>
+            <th>薪資</th>
+        </tr>
+        {% for employee in employees %}
+        <tr>
+            <td>{{ employee.name }}</td>
+            <td>{{ employee.salary }}</td>
+        </tr>
+        {% endfor %}
     </table>
 </body>
 </html>

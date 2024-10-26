@@ -1,62 +1,54 @@
-import sqlite3
 from flask import Flask, render_template, request, redirect, url_for
+import csv
+import os
 
 app = Flask(__name__)
 
-# 資料庫路徑
-DATABASE = '/home/rickneex/employee_data.db'
+# CSV 檔案路徑
+FILE_PATH = '/home/rickneex/hr-system/employee_data.csv'
 
-# 創建資料庫連接
-def get_db_connection():
-    conn = sqlite3.connect(DATABASE)
-    conn.row_factory = sqlite3.Row
-    return conn
+# 檢查 CSV 檔案是否存在，若不存在則創建並添加標題
+if not os.path.exists(FILE_PATH):
+    with open(FILE_PATH, mode='w', newline='', encoding='utf-8') as file:
+        writer = csv.writer(file)
+        writer.writerow(['姓名', '薪資'])  # CSV 標題
 
-# 初始化資料庫
-def init_db():
-    conn = get_db_connection()
-    with conn:
-        conn.execute('''CREATE TABLE IF NOT EXISTS employees (
-                            id INTEGER PRIMARY KEY AUTOINCREMENT,
-                            name TEXT NOT NULL,
-                            salary TEXT NOT NULL,
-                            unique_link TEXT NOT NULL
-                        );''')
-    conn.close()
 
-# 初始化資料庫
-init_db()
+# 顯示生成連結頁面
+@app.route('/')
+def index():
+    return render_template('generate_link.html')  # 渲染首頁模板，顯示連結生成頁面
 
-# HR 查看所有提交的資料
-@app.route('/hr')
+
+# 處理提交表單的路由
+@app.route('/submit', methods=['POST'])
+def submit():
+    employee_name = request.form['name']
+    employee_salary = request.form['salary']
+
+    # 將表單數據追加到 CSV 檔案中
+    with open(FILE_PATH, mode='a', newline='', encoding='utf-8') as file:
+        writer = csv.writer(file)
+        writer.writerow([employee_name, employee_salary])
+
+    # 提交成功後顯示成功頁面
+    return render_template('success.html')
+
+
+# 顯示 HR 後台資料的頁面
+@app.route('/hr_dashboard')
 def hr_dashboard():
-    conn = get_db_connection()
-    employees = conn.execute('SELECT * FROM employees').fetchall()
-    conn.close()
+    employees = []
+
+    # 讀取 CSV 檔案中的員工資料
+    with open(FILE_PATH, mode='r', newline='', encoding='utf-8') as file:
+        reader = csv.reader(file)
+        next(reader)  # 跳過標題行
+        for row in reader:
+            employees.append({'name': row[0], 'salary': row[1]})
+
     return render_template('hr_dashboard.html', employees=employees)
 
-# 用於生成新員工的表單
-@app.route('/generate-link', methods=['GET', 'POST'])
-def generate_link():
-    if request.method == 'POST':
-        name = request.form['name']
-        salary = request.form['salary']
-        # 生成唯一連結
-        unique_link = url_for('employee_form', employee_id=name, _external=True)
-        conn = get_db_connection()
-        conn.execute('INSERT INTO employees (name, salary, unique_link) VALUES (?, ?, ?)', (name, salary, unique_link))
-        conn.commit()
-        conn.close()
-        return redirect(url_for('hr_dashboard'))
-    return render_template('generate_link.html')
-
-# 員工表單
-@app.route('/employee/<employee_id>', methods=['GET', 'POST'])
-def employee_form(employee_id):
-    if request.method == 'POST':
-        # 員工提交後顯示感謝頁面
-        return "感謝您，提交已完成，恭喜入職！"
-    return render_template('employee_form.html', employee_id=employee_id)
 
 if __name__ == '__main__':
     app.run(debug=True)
